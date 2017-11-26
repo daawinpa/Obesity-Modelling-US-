@@ -1,0 +1,330 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{times}
+\usepackage[mathscr]{euscript}
+%\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[normalem]{ulem}
+\usepackage{bm}
+\usepackage{bbm}
+\usepackage{setspace}
+\usepackage{epstopdf}
+\numberwithin{equation}{section}
+
+\usepackage[round]{natbib}
+
+\begin{document}
+\title{\bf Predictive Modeling of Obesity Prevalence for the United States Population}
+\date{May 26, 2017}
+\maketitle
+
+\doublespacing
+
+\begin{abstract}
+Modeling and predicting the obesity prevalence has an important implication in evaluation of mortality risk. A large volume of literature exists in the area of modeling mortality rates, but a very few models have been developed for modeling obesity prevalence. In this study, we propose a new stochastic approach in modeling the obesity prevalence that accounts for a cohort effect and it fits the curvilinear relationship of obesity prevalence and age for the United States population. We analyze the obesity trend for ages 23 to 90 during the period: 1988-2013. While the previous models developed for obesity prevalence reported a good fit, they did not have ability to predict obesity prevalence. Our proposed model has an advantage by utilizing the individual age groups and using fewer number of predictors while achieving a good fit. Most importantly, our model has a good predictive power. We utilize ARIMA type of models for forecasting future obesity rates for the United States population.
+\end{abstract}
+\textsc{Key Words:} age-period-cohort, ARIMA, forecasting, obesity, stochastic modeling, mortality.\\
+\textsc{JEL Classification:} C32, C55, H10, J10, J11. \\
+
+
+\section{Introduction}\label{sec:introduction}
+The obesity epidemic in the United States has important implications in evaluation of the mortality risk. A great number of medical studies examined the issue of obesity and recognized it as a risk factor to adult mortality  \citep{Olshansky+Passaro+Hershow+Layden+Carnes+Brody+Hayflick+Butler+Allison+Ludwig:2005,Chatterjee+Macdonald+Waters:2008}. This risk is factored in pricing and underwriting of life and health insurance policies. According to the report by \cite{Behan+Cox+Lin+Pai+Pedersen+Yi:2010}, the estimated economic cost of overweight and obese people in the United States and Canada combined was \$300 billion in 2009. The annual health care cost in the USA increases in ranges from \$147 billion to nearly \$210 billion, estimated by \cite{Cawley+Meyerhoefer:2012}. If the prevalence of obesity is higher in an insured portfolio relative to the general population, causing an increase in mortality risk, this trend may have a negative impact on profitability of life and health insurance business. Thus, modeling and predicting the obesity prevalence is an important research topic not only in medical studies, but also for the policy makers, and insurance industry.
+
+There is limited literature on modeling obesity prevalence that can be used in pricing of life insurance policies. The study by \cite{Behan+Cox+Lin+Pai+Pedersen+Yi:2010} provided a  comprehensive literary review addressing how the obesity relates to mortality and morbidity costs. \cite{Niverthi+Ianovic:2001}, \cite{Baldinger+Schwarz+Jaggy:2006}, and \cite{BradRoudebush+Ashley+Titcomb:2006} performed the observational cohort-type of studies were they followed a group of life policyholders from the time their policies were issued to death. These studies established the relationships between relative risk of death according to Body Mass Index and  standardized mortality ratio. In general, these results based on the insured population agreed with the general population studies.
+
+A serious of studies in medical field, reported by \cite{Ogden+Carroll+Curtin+McDowell+Tabak+Flegal:2006}, \cite{Flegal+Carroll+Ogden+Curtin:2010}, and \cite{Flegal+Carroll+Kit+Ogden:2012}, on modeling prevalence of obesity in the USA are based on logistic regression of the Body Mass Index on one or several explanatory variables, including a linear trend over time. These studies use data from the National Health and Nutrition Examination Survey (NHANES). Many of these studies are updated as new data become available. Other studies of obesity prevalence, e.g. \cite{Keyes+Utz+Robinson+Li:2010}, focused on modeling cohort effect in addition to age-period effect. These models are basically an ANOVA with three-factors (age, period, and cohort). The literature in this area include, but is not limited to: \cite{Rodgers:1982}, \cite{Glenn:2005}, \cite{Yang+Schulhofer-Wohl+Fu+Land:2008}, \cite{Keyes+Utz+Robinson+Li:2010}, and \cite{Mason+Fienberg:2012}. The main disadvantage of these models is that they cannot be used for prediction of obesity prevalence.
+
+To our best knowledge, there are no studies in the actuarial field that incorporate modeling of obesity prevalence. Our study is the first one to introduce a stochastic model for modeling the obesity prevalence. The stochastic modeling of obesity would be more appropriate because it would allow us to not set the prediction based on the most recent data, but rather to use random variations over time to forecast the future outcome. Our stochastic model is the age-period-cohort model and it is motivated by stochastic mortality models developed in the actuarial literature.
+
+In the past decade, several stochastic mortality models have been proposed to include modeling of cohort effect, along with age and period effects. Some of these models include mortality models proposed by \cite{Renshaw+Haberman:2006}, \cite{Cairns+Blake+Dowd:2006b}, \cite{Cairns+Blake+Dowd:2008a}, \cite{Cairns+Blake+Dowd+Coughlan+Epstein+Ong+Balevich:2009}, and \cite{Cairns+Blake+Dowd+Coughlan+Epstein+Khalaf+Allah:2011}. Forecasting mortality was done based on the time-series $ARIMA$ models. Since mortality and obesity prevalence have similar cross-sectional characteristics, which is varying across age and time period, we take advantage of the stochastic model developed for mortality estimation and apply it to approximate the prevalence of obesity. In modeling obesity prevalence we also consider the cohort effect which we identify as a source of variation. We believe that our proposed model, not only explains the variation in obesity rates across different ages, years and cohorts, but it also has a good predictive capability. While we model the obesity prevalence for the entire USA population, our approach can be adopted by any life insurance company for modeling the obesity prevalence for their own group of life insurance policies.
+
+The rest of this paper is organized as follows. In Section~\ref{sec:modeling}, we define: obesity, obesity prevalence, cohort modeling of obesity prevalence, and discuss the mortality models that we considered as a basis in our study.  In Section~\ref{sec:methodology} we propose our new stochastic model for modeling prevalence of obesity. As part of this section we further discuss, parameter estimation, identifiability constrains, forecasts, and model selection. In Section~\ref{sec:results}, we provide the overview of the data and the summary of the results. The Section~\ref{sec:conclusion} concludes.
+
+
+\section{\textit{Modeling Obesity Prevalence}}\label{sec:modeling}
+
+\subsection{\textit{Definition of Obesity}}
+The prevalence of obesity in the United States in the past decades has become one of the top public health issues. Body Mass Index (BMI) is calculated as weight in kilograms divided by height in meters squared and it serves as a measure to categorize people into  the following categories: underweight $(BMI < 18.5)$, normal weight $(18.5 < BMI < 24.9)$, overweight $(25 < BMI< 29.9)$, or obese $(BMI > 30)$. A great number of medical studies examined the issue of obesity and recognized it as a risk factor to adult mortality. Based on the recent trends in BMI, with a larger proportion of people becoming overweight and obese, the distribution of BMI has shifted in means toward higher BMI levels with an increase in skewness and multimodality (\cite{Miljkovic+Shaik+Miljkovic:2005}). The diseases related to obesity include heart diseases, type-2 diabetes, and some types of cancers as discussed by \cite{Must+Spadano+Coakley+Field+Colditz+Dietz:1999} and \cite{Ebbeling+Pawlak+Ludwig:2002}. \cite{Fontaine+Redden+Wang+Westfall+Allison:2003} estimated that the expected number of years of life lost due to overweight and obesity for age $20-30$ years is 13 for white men and 8 for white women based on the data from the National Health and Nutrition Examination Survey (NHANES; 1976-1994).
+
+\subsection{\textit{Obesity Prevalence}}
+The obesity prevalence is defined as a proportion of obese population at a specific period of time and age. The statistics related to observed obesity prevalence, $p_{xt}$, is defined as
+\begin{equation}\label{eq:a1}
+p_{xt}=\frac{\sum_{i=1}^{N_{xt}}{\mathbbm{1}_{[BMI_{i}>30]}}}{N_{xt}},
+\end{equation}
+where $N_{xt}$ respresents the number of individuals age $x$ in year $t$, and ${\mathbbm{1}_{[.]}}$ is an indicator function that takes on value of 1 when the $BMI_{i}$ of individual $i$ is above 30 and zero otherwise. The $p_{xt}$ can be displayed by a contingency table where age and period are in rows and columns respectively. Cohort effect represents the difference between period and age reflected in the diagonal elements. Each diagonal of this table shows how the obesity prevalence rate changes for each cohort of individuals as they age. This contingency table structure is similar to the table used in the mortality modeling where the mortality rate is computed for each combination of age and period.
+
+
+\subsection{\textit{Modeling Cohort Effect in Obesity Prevalence}}
+
+In the obesity-related studies, a cohort effect could arise when a population-level environmental cause is unequally distributed in the population. For example, if the consumption of fast food and soft drinks increases in the population (period effect), the effect may be more pronounced in younger aged population cohort because of higher consumption in this age group relative to older aged group. In addition to age and period effect, the cohort effect might be an important part of the modeling of obesity prevalence. According to \cite{Keyes+Utz+Robinson+Li:2010}, over the years various efforts to model cohort effect could be categorized into three main statistical methods: 1) Constraint-based method, 2) Holford method, and 3) Median Polish method.
+
+The Constrained-based method (CBM) is known as a three-factor ANOVA where the factors are defined as age, period, and cohort. It is characterized by the following equation
+\begin{equation}\label{eq:p1}
+\text{ln}(p_{xtk})=\mu + \alpha_{x} + \beta_{x} + \gamma_{k} + \epsilon_{xt}
+\end{equation}
+where $p_{xtk}$, $\alpha_{x}$, $\beta_{x}$, $\gamma_{k}$, and $\epsilon_{xt}$ are the obesity rate, constant term , $m-1$ age effects , $n-1$ period effects , $m+n-2$ cohort effects, and error term respectively. Here $m$ is the number of age groups and $n$ is the number of different years in the data. Applying the natural log transformation of this type of response variable is commonly done in epidemiology and mortality studies, as it helps with interpretation of the results \citep{Keyes+Li:2010}. The transformation also helps in reducing the positive skewness of the distribution and normalizing residuals around zero.
+
+The model in Equation \ref{eq:p1} has an identifiability problem because there is no unique set of
+regression parameters when all three of these factors (age, period, and cohort) are in the analysis
+simultaneously. For example, the additional constraints on the parameters must be made to obtain a unique solution.
+
+A large volume of academic literature exist to address this identifiability problem. Literature in this area include: Mason et al. (1973), Rodgers (1982), Clayton  and Schifflers (1987) and more recently \cite{Glenn:2005} and Yang et al. (2008). \cite{Holford:1983}, \cite{Holford:1991}, and \cite{Holford:1992} attempted to solve this identifiability issue with constraint age-period-cohort models by suggesting a new approach that considers the second order effects with a focus on contrasts that are linear.
+
+In order to solve the identifiability issue, \cite{Holford:1991} proposed a method that focuses on the linear contrasts
+derived from the parameter estimates from a Constraint-based three-factor model previously defined. These linear contrasts are known as "curvatures". The curvature is specific to each factor in the Constraint-based three factor model and should be used to capture the overall direction of the non-linear trend over time. The reader is referred to the original paper by \cite{Holford:1991} for more details about this method.
+
+The third approach is known as as Median Polish which foundation was set by \cite{Tukey:1977}. This method does not consider additive effect of cohort. Median Polish is defined as a two-factor model (age and period) with no constraints and characterized by the following expression
+\begin{equation}
+\label{eq:p1a}
+\text{ln}(p_{xt})=\mu + \alpha_{x} + \beta_{x} + \epsilon_{xt}.
+\end{equation}
+\cite{Selvin:2004} suggested the use of this method for age-period-cohort analysis is heavily reliant on a contingency table having the various age groups and periods in rows and columns respectively. This method basically deducts the median of each row and column iteratively. The residuals of the median are then regressed on dichotomous indicator variables in order to establish their classification to a cohort period using ordinary least squares regression. The cohort effect is then estimated as the degree of accuracy to which the computed variable correctly classifies the residual (see \cite{Keyes+Utz+Robinson+Li:2010}). In the mortality analysis, other researchers have suggested estimating the cohort effect through a multiplicative interaction of period and age (refer to \cite{Keyes+Utz+Robinson+Li:2010}).
+
+\subsection{\textit{Link to Mortality Models}}
+Mortality and obesity prevalence have similar cross-sectional characteristics, which is varying across age and time period. Therefore, we cross-examined several stochastic mortality models with a cohort effect, developed for mortality estimation, with application in modeling the prevalence of obesity. We briefly provide the background of the mortality models with a special focus on a stochastic modeling of mortality that incorporates the cohort effect.
+
+\cite{Lee+Carter:1992} developed and published a method for forecasting of trends and age patterns in mortality.  Many adjustments have been made to the Lee-Carter model. One of the extensions is the model proposed by \cite{Renshaw+Haberman:2006}. This model generalized the Lee-Carter model to include a cohort effect. The model is characterized and formulated as
+\begin{equation}\label{eq:p2}
+\text{log}(m(x,t))=\beta_x^{(1)}+ \beta_x^{(2)}k_t^{(2)}+ \beta_x^{(3)}\gamma_{t-x},
+\end{equation}
+where $m(x,t)$ denotes the death rate, $\beta_x^{(1)}$ and $\beta_x^{(2)}$ are age predictors with a coefficient $k_t^{(2)}$ and $\gamma_{t-x}$ is the cohort predictor with its $\beta_x^{(3)}$ coefficient. \cite{Cairns+Blake+Dowd:2006} fitted the following model to mortality rates
+\begin{equation}\label{eq:p3}
+\text{log}(q(x,t))=k_t^{(1)}+ k_t^{(2)}(x - \bar{x}),
+\end{equation}
+where $q(x,t)$ is the mortality rate and $k_t^{(1)}$, $k_t^{(2)}$ are age coefficient associated with each period $t$, and $\bar{x}$ is the average age. This model is popularly known as the CBD model which is named after the names of its authors. A generalization of the CBD model that adds a cohort effect, $\gamma_{t-x}$, and the quadratic term into the age effect is the popularly known as the $M7$ model. According to \cite{Cairns+Blake+Dowd+Coughlan+Epstein+Khalaf+Allah:2011}, the inclusion of the quadratic term with the coefficient $k_t^{(3)}$ is inspired by some curvature identified in the $\text{log}(q(x,t))$ plots in the US data. The authors defined $M7$ model using the following link function
+\begin{equation}\label{eq:p4}
+\text{logit}(q(x,t))=k_t^{(1)}+ k_t^{(2)}(x - \bar{x}) + k_t^{(3)}((x - \bar{x})^{2} - \hat\sigma_x^{2}) + \gamma_{t-x}.
+\end{equation}
+Here the quadratic term also includes $\hat\sigma_x^{2}$ defined as average of $(x - \bar{x})^{2}$ for all ages.
+It is worthy to note that several extensions have been provided to their basic mortality model proposed by \cite{Cairns+Blake+Dowd+Coughlan+Epstein+Ong+Balevich:2009}. These models are known in academic literature as the Generalized Age-Period-Cohort (GAPC) stochastic mortality models.
+
+\section{Methodology}\label{sec:methodology}
+
+\subsection{\textit{Proposed Model}}
+Since mortality and obesity prevalence have similar cross-sectional characteristics, which are varying across age and time period, we apply a GAPC stochastic mortality model to predict the prevalence of obesity.
+As displayed in Figure 1 below,  for a given year, the proportion of obesity has a quadratic relationship with age.  Based on this finding we propose the following stochastic model for obesity prevalence
+\begin{eqnarray}
+\label{eq:proposed}
+p(x,t)=k_t^{(1)}+ k_t^{(2)}(x - \bar{x}) + k_t^{(3)}\{(x - \bar{x})^{2} - \hat\sigma_x^{2}\} + \gamma_{t-x}+\epsilon_{x,t},
+\end{eqnarray}
+%where each term in this model are defined as follows
+where $p(x,t)$ is the  proportion of obese people aged $x$ in year $t$,
+$k_t^{(1)}$, $k_t^{(2)}$, $k_t^{(3)}$ are the period effect coefficients to be estimated,
+$\gamma_{t-x}$ is the random cohort effect,
+$\bar x$ and $\hat\sigma_x^2$ are the sample mean and  variance of  all ages under consideration in the model, respectively and $\epsilon_{x,t}$ is a random error with a zero mean and  independent of $x$. We will refer to this model as CBD-O model which is a modified version of the CBD model with the application to modeling obesity prevalence.
+
+\subsection{\textit{Parameter Estimation}}
+In this section, we introduce an iterative estimation procedure to estimate the period effect coefficients $k_t^{(1)}$, $k_t^{(2)}$, $k_t^{(3)}$ and  cohort effect $\gamma_{t-x}$.  Let $n$ and $m$ denote  the total number of ages and the length of years/period under consideration, respectively.
+ Since the period effect coefficients and cohort effect cannot be estimated at once, there is an identifiability issue in estimation. To circumference this issue, we here impose a set of constraints on $\gamma_{t-x}$
+\begin{eqnarray}\label{eq:constraint}
+\sum_{c=t_1-x_n}^{t_m-x_1}\gamma_c=0 ,\quad\quad \sum_{c=t_1-x_n}^{t_m-x_1}c\gamma_c=0,\quad\quad \sum_{c=t_1-x_n}^{t_m-x_1}c\gamma_c^2=0.
+\end{eqnarray}
+Incorporating those constraints above, a step-by-step estimation procedure is described as follows.
+
+\begin{enumerate}
+\item  For a given year $t$, the proposed model (\ref{eq:proposed}) can be viewed as a polynomial regression model
+\begin{eqnarray*}
+p(x,t)=k_t^{(1)}+ k_t^{(2)}(x - \bar{x}) + k_t^{(3)}\{(x - \bar{x})^{2} - \hat\sigma_x^{2}\} +e_{x,t}
+\end{eqnarray*}
+where $e_{t,s}=\gamma_{t-x}+\epsilon_{x,t}$.   Thus, estimators $\hat{k}_t^{(1)}$, $\hat{k}_t^{(2)}$, $\hat{k}_t^{(3)}$, $k=t_1,\dots,t_m$, can obtained by the ordinary least squares estimation.
+
+\item Compute residuals denoted by $\hat{e}_{x,t}=p(x,t)-[\hat{k}_t^{(1)}+ \hat{k}_t^{(2)}(x - \bar{x}) + \hat{k}_t^{(3)}\{(x - \bar{x})^{2} - \hat\sigma_x^{2}\}]$ and obtain $\hat\gamma_{t-x}$ by averaging the corresponding residuals to cohort $t-x$, that is
+$$
+\hat\gamma_{t-x}=\frac{1}{n_{t-x}}\sum_{i,j}\hat{e}_{i,j}1(j-i=t-x),
+$$
+where $1(\cdot)$ is an indicator function and $n_{t-x}$ is the number of cohort $t-x$  under consideration in the model.  Note that $\hat\gamma_{t-x}$ is a valid estimator of   $\gamma_{t-x}$ because $E(e_{x,t})=0$.
+
+\item To deal with the identifiability issue, the constraints in (\ref{eq:constraint}) are imposed by regressing  $\hat{\gamma}_{t-x}$ on $t-x$ and $(t-x)^2$, that is
+$$
+\hat{\gamma}_{t-x}=\beta_0+\beta_1(t-x)+\beta_2(t-x)^2+\varepsilon_{t-s}.
+$$
+Let  $\hat\beta_0$, $\hat\beta_1$ and  $\hat\beta_2$ denote  the estimators of $\beta_0$, $\beta_1$ and  $\beta_2$ obtained by the least squares estimation. Then, apply transformation $\tilde{r}_{t-x}=\hat{\gamma}_{t-x}-\{\hat\beta_0+\hat\beta_1(t-x)+\hat{\beta}_2(t-x)^2\}$, $\tilde{k}_t^{(1)}=\hat{k}_t^{(1)}+\hat\beta_0+\hat\beta_1(t-\bar{x})+\hat{\beta}_2(t-\bar{x})^2+\hat{\sigma}^2$,  $\tilde{k}_t^{(2)}=\hat{k}_t^{(2)}-\hat\beta_1-2\hat\beta_2(t-\bar{x})$  and  $\tilde{k}_t^{(3)}=\hat{k}_t^{(3)}+\hat\beta_2$ (Cairns et al., 2009 and Villegas et al., 2013).
+\item Replace $p(x,t)$ in Step 1 by $p(x,t)-\tilde{r}_{t-x}$ and  iterate Steps 1--3 until convergence is achieved.
+\end{enumerate}
+% Programming to fit the models was performed in the free to use R Studio software.
+
+\subsection{\textit{Forecasts}}
+
+The salient feature of  GAPC stochastic mortality models is to enable to predict the future response variables. Once $\tilde{k}_t^{(1)}$, $\tilde{k}_t^{(2)}$, $\tilde{k}_t^{(3)}$, $t=t_1,\dots,t_m$, and $\tilde{r}_{c}$, $c= t_1-x_n,\dots,t_m-x_1$, are estimated, we can make use of time series forecasting techniques to appropriately forecast obesity prevalence. For a given age $x$, the future obesity prevalence $p(x,t+\lambda)$, $\lambda=1,2,\dots$ can be predicted by
+$$
+p(x,t+\lambda)=k_{t+\lambda}^{(1)}+ k_{t+\lambda}^{(2)}(x - \bar{x}) + k_{t+\lambda}^{(3)}\{(x - \bar{x})^{2} - \hat\sigma_x^{2}\} + \gamma_{{t+\lambda}-x}.
+$$
+The future period effect coefficients $k_{t+\lambda}^{(1)}$, $k_{t+\lambda}^{(2)} $ and $k_{t+\lambda}^{(3)}$ and the cohort effect $\gamma_{{t+\lambda}-x}^{(4)}$  can be predicted by using  ARIMA models and an ARMA model, respectively.
+
+In addition to the point prediction $p(x,t+\lambda)$, we investigate the construction of prediction interval of $p(x,t+\lambda)$. The prediction interval consists of two resources of uncertainty. The first uncertainty arises from the error $e_{x,t}$ in the forecast of the period and the other one arises from the estimation of $k_t^{(1)}$, $k_t^{(2)}$, $k_t^{(3)}$ and   $\gamma_{t-x}$. We take into account the uncertainty from the estimation  by residual bootstrap.
+
+\begin{enumerate}
+\item Obtain the residuals $\tilde{\epsilon}_{x,t}=p(x,t)-[\tilde{k}_t^{(1)}+ \tilde{k}_t^{(2)}(x - \bar{x}) + \tilde{k}_t^{(3)}\{(x - \bar{x})^{2} - \hat \sigma_x^{2}\}+\tilde{\gamma}_{t-x}]$.
+
+\item Create $B$ data replications $p^b(x,t)$,  $b=1,\dots,B$, by resampling $\tilde{\epsilon}_{x,t}$ with replacement  and adding it to $\tilde{k}_t^{(1)}+ \tilde{k}_t^{(2)}(x - \bar{x}) + \tilde{k}_t^{(3)}\{(x - \bar{x})^{2} - \hat \sigma_x^{2}\}+\tilde{\gamma}_{t-x}$.
+
+\item Based on  data replications $p^b(x,t)$, estimate $\tilde{k}_t^{b(1)}$, $\tilde{k}_t^{b(2)}$, $\tilde{k}_t^{b(3)}$ and $\tilde{r}_{t-x}^b$. %and obtain the residuals $\tilde{\epsilon}_{x,t}^b$ from boostrap data.
+Predict $p^b(x,t+\lambda)$ by making use of time series forecasting techniques introduced above.
+
+\item
+For a given $x$, $\tilde{e}_{x,t_1},\dots,\tilde{e}_{x,t_m}$ can be viewed as time series, so   a $(1-\alpha)\%$ prediction interval for residuals $\tilde{e}_{x,t+\lambda}$, $\lambda=1,2,\dots,$ can be constructed, which is  denoted by $[l_{x,t+\lambda},u_{x,t+\lambda}]$.
+
+\item A $(1-\alpha)\%$ prediction interval for $p(x,t+\lambda)$ is constructed with  the $(\alpha/2)100$th
+quantiles of $p^b(x,t+\lambda)-l_{x,t+\lambda}$, $b=1,\dots,B$,
+and $(1-\alpha/2)100$th quantile of $p^b(x,t+\lambda)+u_{x,t+\lambda}$, $b=1,\dots,B$.
+\end{enumerate}
+
+\subsection{\textit{Goodness of Fit and Model Selection}}
+Generally speaking from a statistical point of view, the best estimates or projections are those from models that minimize the error or residuals.  We can simply evaluate models using the Least Residual Errors usually measured by the Mean Squared Error.
+Alternatively, we can use some more powerful model selection techniques like the Akaike Information criterion (AIC), Bayesian Information Criterion (BIC) and Mean Absolute Percentage Error (MAPE) to evaluate the models and check for goodness of fit of the model.
+
+Bayesian Information Criterion (BIC) is a usually used for selecting the best model among a set of models. It is proposed by \cite{Schwarz:1978} and formulated as follows
+$$BIC =-2 L(\theta)+k\text{ln}(n)$$
+Where k is the number of free parameters estimated and for the Gaussian case the log-likelihood  $L(\theta)$ can be replaced by $\text{ln}(\sigma_e^2 )$.
+Here $\sigma_e^2$     is defined as the estimated variance associated with the error estimated as
+
+$$\sigma_e^2 =\frac{1}{NM}\sum_{x,t}^{NN}(\hat p_{xt}-p_{xt})^2 $$.
+Models with smaller BIC are preferred.
+
+Akaike Information criterion (AIC) proposed by \cite{Akaike:1974}, measures the quality of a statistical model relative to others for a given set of data.  It is defined as
+$$AIC =-2L(\theta)+2k$$
+Where k is the number of free parameters estimated and for the Gaussian case the log-likelihood  $L(\theta)$ can be replaced by $\text{ln}((\sigma_e^2 )$. Models with smaller AIC are preferred.
+
+The Mean Absolute Percentage Error (MAPE) in utility for our purpose is defined below:
+
+$$MAPE=\frac{1}{NM}\sum_{x,t}^{NN} \frac{(\hat p_{xt}-p_{xt})^2}{p_{xt}}$$
+
+Where $N(25)$ is the period dimension and $M(68)$ is the age dimension. Models with smaller MAPE are preferred.
+
+\section{Analysis and Results}\label{sec:results}
+\subsection{Data}
+In order to explore the impact of obesity dynamics, we analyzed the time series of obesity prevalence data for the United States population, in the  period 1988-2012. The data were obtained from Behavioral Risk Factor Surveillance System (BRFSS) survey, sponsored by Centers for Disease Control and Prevention (CDC)[BRFSS, 1988-2012]. The BRFSS survey includes variables for more than 400,000 adults interviewed each year. We combined individual annual data on height and weight into a large database with 7,009,198 records. Then the data were aggregated by age (23-90) and year (1988-2012) and the observed obesity prevalence is computed using Equation \ref{eq:a1}. This process allowed us to develop a contingency table of the time series of obesity prevalence data by age and period.
+
+The top portion of Figure \ref{fig:plot1} shows observed cross-sectional obesity prevalence graphed over age and year based on the actual data. The smoother line was added to each time series by age, for each period. The smoother line color changes over time, emphasizing lighter color for more recent years. The obesity prevalence by year follows a downward concave curvature trend with the maximum observed at age 60. A similar figure is displayed in Figure \ref{fig:plot1} (middle portion), after applying a log transformation to obesity prevalence. The effect of the log transformation on these curves is such that they are more flatter and less band down. The overall shape of the data confirms that a quadratic model for age and period should be appropriate.
+
+The bottom portion of Figure \ref{fig:plot1} shows the observed cross-sectional prevalence graphed over years for each age based on actual data. The smoother line was added to each time series of data by age. All age groups have experienced an increasing trend in obesity prevalence in past two decades. The smoother line color changes over age, emphasizing lighter color for older ages. We observe that the rate of increase in obesity over time is more prevalent for middle-age people rather than older people.
+
+\begin{figure}
+\begin{center}
+{\resizebox*{10cm}{!}{\includegraphics{Figure1.eps}}}
+{\resizebox*{10cm}{!}{\includegraphics{Figure3.eps}}}
+{\resizebox*{10cm}{!}{\includegraphics{Figure2.eps}}}
+\caption{\label{fig:plot1} $p_{xt}$ plotted by age and time (top). $\log(p_{xt})$ plotted by age and time (middle). $p_{xt}$ plotted by time and age (bottom).}
+\end{center}
+\end{figure}
+
+\subsection{Results}
+
+In this section, we present the results of our analysis of obesity prevalence for the USA population using the proposed CBD-O model. Figure \ref{fig:plot2} presents the results of the estimation from the proposed model fit. Each triplet of $\hat k_t^{(1)}$, $\hat k_t^{(2)}$ and $\hat k_t^{(3)}$ is estimated for each of the 25 years. Parameter, $\hat k_t^{(1)}$, has a positive relationship with time period and clearly rising trend. This parameter in the CBD-O model is similar to the intercept of a regression model.  The second parameter $\hat k_t^{(2)}$, has a decreasing trend when observed over time. The third parameter $\hat k_t^{(3)}$, which models the quadratic effect has an increasing trend over time.
+
+The cohort effect estimates, $\hat \gamma_{t-x}$, are plotted for the various periods from 1898 to 1989. In our data the birth cohorts are considered for period 1898-1989. The lowest period under consideration (1988) corresponds to the highest age under consideration (90). Figure \ref{fig:plot2} shows that cohort estimates oscillate around zero.  These estimates have higher magnitude for birth cohort years past 1960 compared to those for years prior to 1960. Since there is no evidence of significant cohort effect this term is excluded from our model.
+
+\begin{figure}
+\begin{center}
+{\resizebox*{10cm}{!}{\includegraphics{Figure4.eps}}}
+{\resizebox*{10cm}{!}{\includegraphics{Figure5.eps}}}
+\caption{\label{fig:plot2}Parameter estimates from the proposed model: $\hat k_t^{(1)}$, $\hat k_t^{(2)}$, $\hat k_t^{(3)}$ (top panel) and $\hat \gamma_{t-x}$ (bottom).}
+\end{center}
+\end{figure}
+
+The top portion of Figure \ref{fig:f5} shows the proposed CBD-O model with the cohort effect. Here we fitted 25 curves representing the model fit for the various periods from 1988 to 2012. More recent years are represented with lighter colors. The bottom portion of Figure \ref{fig:f5} shows the proposed CBD-O model without the cohort effect.
+
+\begin{figure}
+\begin{center}
+{\resizebox*{10cm}{!}{\includegraphics{Figure6.eps}}}
+{\resizebox*{10cm}{!}{\includegraphics{Figure7.eps}}}
+\caption{\label{fig:f5} Fitted values from the proposed model: with cohort effect (top) and without cohort effect (bottom).}
+\end{center}
+\end{figure}
+
+Since the cohort was not found to be a significant term in the CBD-O model, we proceed with our analysis without cohort effect. Thus the final model is one without the cohort. In Figure \ref{fig:3pl}, fitted values are compared across the three models: 1) CBD-O, 2) CBM, and 3) Median Polish. We can observe that the fitted lines have some adjustments as compared to the smooth curves from the quadratic regression model with no cohort effect (see top portion of Figure \ref{fig:3pl}). Again, here we plot 25 fitted curves representing the model fit for the various periods from 1988 to 2012.
+
+The CBM is equivalent to an ANOVA model with parameters to estimate the cohort effect. Thus, in this model the cohort effect is viewed as the 3rd factor effects in the ANOVA model hence there are m+n-1 parameters to estimate.  A marked difference between our proposed approach and the CBM is that here the cohort effect is treated as a parameter. The Median Polish approach resemble the use of some form of central tendency for the fitting of the lines to the observed obesity rates.
+\begin{figure}
+\begin{center}
+{\resizebox*{10cm}{!}{\includegraphics{Figure8.eps}}}
+{\resizebox*{10cm}{!}{\includegraphics{Figure9.eps}}}
+\caption{\label{fig:3pl} Constraint based model (top); Median Polish model (bottom).}
+\end{center}
+\end{figure}
+
+In Table 1 below, we provide the summary of evaluation criteria commonly used for the model comparisons. In comparing models, we normally prefer models with smaller values of MAPE, BIC, the number of parameters, and MSE over their counterparts. While the MAPE and MSE are smaller for CBM and Median Polish model compared to our proposed and final models, the number of parameters for the CBD-O model without cohort is significantly smaller. The BIC of the CBO-O without cohort is very comparable to the BIC of the CBM. While the CBM shows slightly superior fit, its has a greater complexity given significantly larger number of parameters. \cite{Klugman+Panjer+Willmot:2012} stated that using principle of {\it parsimony}, simpler models should be preferred over more complex models because there is no guaranty that the more complex model will match the population from which the sample is drawn. Another advantage of our stochastic CBD-O model is that it allows us to estimate the future obesity prevalence which is not a characteristic of the model-based approaches such as CBM or Median Polish models.
+
+\begin{table}[]
+\centering
+\caption{Summary of the results for four different models.}
+\label{mixtures}
+\begin{tabular}{lcccc}
+\hline\hline
+Statistics & CBD-O & CBD-O without cohort & CBM & Median Polish \\
+\hline
+MAPE  & 4.75\%	& 4.64\%  & 2.97\%& 4.17\%  \\
+BIC & -6137.776 &   -6868.232 & -6895.465 &-6485.618\\
+\# of parameters &167 & 75 & 183 & 94\\
+MSE & 0.0130 &  0.0127 & 0.0078 & 0.0146\\
+\hline\hline
+\end{tabular}
+\end{table}
+
+For the purposes of performing time series analysis and forecast, we undertook time series analysis with our estimated coefficients. We observed that the ARIMA $(0,1,0)$ fits the series of the coefficients $k_t^{(1)}$, $k_t^{(2)}$, $k_t^{(3)}$. The ARIMA $(0,1,0)$ model is stated as $k_{(t+1)}^{(1)}= u + k_t^{(1)}$ where $u$ is the long term drift in $k_t^{(1)}$. Figure \ref{fig:f10}  depicts a 6-year time series forecast of model coefficients. We observe a rising trend for the intercept $k_t^{(1)}$, a decreasing trend for the coefficient of the age predictor $k_t^{(2)}$, an increasing trend for the coefficient of the quadratic term $k_t^{(3)}$.
+
+\begin{figure}
+\begin{center}
+{\resizebox*{10cm}{!}{\includegraphics{Figure10.eps}}}
+\caption{\label{fig:f10} A 6-year time series forecast of model coefficients and cohort effect}
+\end{center}
+\end{figure}
+
+Figure \ref{fig:f11} depicts a 6-year forecast of obesity rates for individuals of age 45, 55, 65 and 75. The forecasts were based on an ARIMA $(0, 1,0)$. The red line in each fan represents the central tendency or the most probable forecast. The outlines of the fan represents the lower and upper limit of the 95\% confidence interval of the forecast (outlined in blue color). The width of each fan represents the degree of uncertainty in the forecast. This uncertainty is smaller for ages 45 and 55 compared to that for ages 65 and 75.
+
+\begin{figure}
+\begin{center}
+{\resizebox*{10cm}{!}{\includegraphics{Figure11.eps}}}
+\caption{\label{fig:f11} A 6-year time series forecast of obese population for ages: 45, 55, 65, 75}
+\end{center}
+\end{figure}
+
+Table \ref{forecast} shows the 6-year forecast based on the CBD-O without cohort, by 5-year age increment. The increase in obesity prevalence is the highest for ages 45-50. Older ages, 65-90, are forecasted to have an average increase in obesity prevalence of about 2.69\%. Ages 25-40 are expected to see on average 4\% increase in the obesity prevalence.
+\begin{table}[]
+\centering
+\caption{The 5-year forecast of obesity prevalence based on the proposed model.}
+\label{forecast}
+\begin{tabular}{lrrr}
+\hline\hline
+Age &	2012 &	2018 &	   Increase\\
+\hline\hline
+25 &	19.44\%	& 24.00\%	& 4.56\%\\
+30 &	25.21\%	& 28.75\%	& 3.55\% \\
+35 &	28.41\%	& 32.57\%	& 4.16\%\\
+40 &	31.73\%	& 35.45\%	& 3.72\%\\
+45 &	31.03\%	& 37.39\%	&6.37\%\\
+50 &	32.04\%	& 38.39\%	&6.35\%\\
+55 &	33.16\%	& 38.45\%	&5.29\%\\
+60 &	32.00\%	& 37.57\%	&5.57\%\\
+65 &	32.96\%	& 35.75\%	&2.79\%\\
+70 &	30.72\%	& 32.99\%	   &2.27\%\\
+75 &	26.71\%	& 29.29\%	 & 2.58\%\\
+80 &	21.75\%	& 24.65\%	 & 2.90\%\\
+85 &	15.66\%	& 19.07\%	 & 3.41\%\\
+90 &	10.37\%	& 12.55\%	 & 2.18\%\\
+\hline\hline
+\end{tabular}
+\end{table}
+Our model can be used by insurance companies as predictive modeling tool in modeling obesity prevalence for their own life insurance portfolio, in order to make appropriate risk management decisions. The results of these models based on the individual portfolios can be compared to those results from the general population.
+
+\section{Conclusion}\label{sec:conclusion}
+ Predictive modeling of obesity prevalence is a useful process in risk management and evaluation of the mortality risk. Life insurance companies account for the risk due to obesity prevalence when pricing the life insurance policies. The ultimate goal from the predicting the obesity prevalence rates is to enables us to appropriately adjust mortality risk and hence life expectancy as important pricing indicators.
+
+ In this study, we proposed a new stochastic approach in predictive modeling of obesity for the US population for the data based on the period 1988-2012. The proposed CBD-O model makes a use of the individual age-period-cohort effects and utilizes an iterative algorithm to estimate obesity rates for various ages and appropriate periods of interest. The fit of our proposed model based on BIC is significantly improved over the constrained-based ANOVA model previously considered. Also the proposed method makes use of individual age and year groups rather than age bins (21-25, 26-30, 31-35, etc.) and year bins (1971-1975, 1976-1980, 1981-1985, etc.) previously considered. Most importantly our model can be used in prediction of future values as we incorporate time series forecasting techniques which have not been considered previously in this research area.
+
+ The foundation of the CBD-O model idea lies in the mortality model proposed by \cite{Cairns+Blake+Dowd+Coughlan+Epstein+Khalaf+Allah:2011}, known as "M7" CBD model. Sine the obesity and mortality share similar cross-sectional characteristics we considered exploring the appropriate mortality models that can be applicable for modeling obesity prevalence. The advantage of using a stochastic model for modeling obesity prevalence is that this model has a predictive capability compared to those other models previously used which can not be used in forecasting the obesity prevalence.
+
+ After fitting the CBD-O model using the US data on obesity prevalence, we determined that the cohort effect was not a significant predictor of obesity prevalence for the period under this study. The best model for modeling the obesity prevalence for the US population is found to be one with age and period effects only (CBD-O withoiut cohort). While the existing ANOVA/Effects models reported good fit, our final model tends to have an advantage of using fewer predictors to achieve a good fit. We have performed time series analysis and suggested appropriate ARIMA models that are best for forecasting the prevalence of obesity. We provided the 5-year forecast (2013-2018) of the obesity prevalence for age group 25-90 in increment of 5 years.
+
+Current mortality models considered in the actuarial literature are not adjusted to account for the obesity prevalence. This may be a topic of future research. Adjusting papulation mortality rates to account for obesity trends would have important implications in many fields.
+
+We hope that the CBD-O model will be found useful tool in modeling the obesity prevalence rates not only by insurance companies, but also by government agencies, and policy makers interested in monitoring obesity trends in the US.
+
+\bibliographystyle{elsart-harv}
+\bibliography{BMI_Mortality}
+
+\end{document}
+
+
